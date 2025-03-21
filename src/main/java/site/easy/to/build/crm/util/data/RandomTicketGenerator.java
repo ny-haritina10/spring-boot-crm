@@ -14,7 +14,6 @@ public class RandomTicketGenerator {
 
     private static final Random random = new Random();
 
-    // Possible values based on @Pattern annotations
     private static final String[] STATUSES = {
         "open", "assigned", "on-hold", "in-progress", "resolved", "closed", 
         "reopened", "pending-customer-response", "escalated", "archived"
@@ -40,13 +39,11 @@ public class RandomTicketGenerator {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
 
-    // Constructor to inject repositories
     public RandomTicketGenerator(UserRepository userRepository, CustomerRepository customerRepository) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
     }
 
-    // Generate a single random ticket using existing entities from DB
     public Ticket generateRandomTicket() throws IllegalStateException {
         List<User> users = userRepository.findAll();
         List<Customer> customers = customerRepository.findAll();
@@ -62,7 +59,6 @@ public class RandomTicketGenerator {
         return createTicket(manager, employee, customer);
     }
 
-    // Helper to create a ticket with given entities
     private Ticket createTicket(User manager, User employee, Customer customer) {
         Ticket ticket = new Ticket();
         
@@ -78,19 +74,16 @@ public class RandomTicketGenerator {
         return ticket;
     }
 
-    // Generate random subject
     private String generateRandomSubject() {
         return SUBJECTS[random.nextInt(SUBJECTS.length)];
     }
 
-    // Generate random description
     private String generateRandomDescription() {
         String template = DESCRIPTION_TEMPLATES[random.nextInt(DESCRIPTION_TEMPLATES.length)];
         String detail = generateRandomDetail();
         return String.format(template, detail);
     }
 
-    // Helper to generate random detail for description
     private String generateRandomDetail() {
         String[] details = {
             "authentication", "payment processing", "new dashboard feature",
@@ -99,31 +92,26 @@ public class RandomTicketGenerator {
         return details[random.nextInt(details.length)];
     }
 
-    // Generate random status
     private String generateRandomStatus() {
         return STATUSES[random.nextInt(STATUSES.length)];
     }
 
-    // Generate random priority
     private String generateRandomPriority() {
         return PRIORITIES[random.nextInt(PRIORITIES.length)];
     }
 
-    // Generate random created_at timestamp (within the last 30 days)
     private LocalDateTime generateRandomCreatedAt() {
         LocalDateTime now = LocalDateTime.now();
-        int daysBack = random.nextInt(30); // Random day within last 30 days
+        int daysBack = random.nextInt(30); 
         int hours = random.nextInt(24);
         int minutes = random.nextInt(60);
         return now.minusDays(daysBack).minusHours(hours).minusMinutes(minutes);
     }
 
-    // Get a random user from the list
     private User getRandomUser(List<User> users) {
         return users.get(random.nextInt(users.size()));
     }
 
-    // Get a random customer from the list
     private Customer getRandomCustomer(List<Customer> customers) {
         return customers.get(random.nextInt(customers.size()));
     }

@@ -46,7 +46,9 @@
 
                 <li class="nav-small-cap">--- Database</li>
                 <li>
-                    <a class="waves-effect waves-dark" th:href="${home + 'database/reset'}">
+                    <a class="waves-effect waves-dark" 
+                    th:href="${home + 'database/reset'}" 
+                    onclick="return confirm('Do you want to reset the database? This action cannot be undone.');">
                         <i class="fas fa-file-contract"></i>
                         <span class="hide-menu">Reset</span>
                     </a>

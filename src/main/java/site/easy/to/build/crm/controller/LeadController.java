@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,6 +43,7 @@ import jakarta.persistence.EntityManager;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.CustomerLoginInfo;
 import site.easy.to.build.crm.entity.EmailTemplate;
+import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.entity.File;
 import site.easy.to.build.crm.entity.GoogleDriveFile;
 import site.easy.to.build.crm.entity.Lead;
@@ -55,6 +58,7 @@ import site.easy.to.build.crm.google.service.acess.GoogleAccessService;
 import site.easy.to.build.crm.google.service.calendar.GoogleCalendarApiService;
 import site.easy.to.build.crm.google.service.drive.GoogleDriveApiService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
+import site.easy.to.build.crm.repository.ExpenseRepository;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.drive.GoogleDriveFileService;
 import site.easy.to.build.crm.service.file.FileService;
@@ -86,12 +90,14 @@ public class LeadController {
     private final LeadEmailSettingsService leadEmailSettingsService;
     private final GoogleGmailApiService googleGmailApiService;
     private final EntityManager entityManager;
+    private final ExpenseRepository expenseRepository;
 
     @Autowired
     public LeadController(LeadService leadService, AuthenticationUtils authenticationUtils, UserService userService, CustomerService customerService,
                           LeadActionService leadActionService, GoogleCalendarApiService googleCalendarApiService, FileService fileService,
                           GoogleDriveApiService googleDriveApiService, GoogleDriveFileService googleDriveFileService, FileUtil fileUtil,
-                          LeadEmailSettingsService leadEmailSettingsService, GoogleGmailApiService googleGmailApiService, EntityManager entityManager) {
+                          LeadEmailSettingsService leadEmailSettingsService, GoogleGmailApiService googleGmailApiService, EntityManager entityManager,
+                          ExpenseRepository expenseRepository) {
         this.leadService = leadService;
         this.authenticationUtils = authenticationUtils;
         this.userService = userService;
@@ -105,6 +111,7 @@ public class LeadController {
         this.leadEmailSettingsService = leadEmailSettingsService;
         this.googleGmailApiService = googleGmailApiService;
         this.entityManager = entityManager;
+        this.expenseRepository = expenseRepository;
     }
 
     @GetMapping("/show/{id}")
@@ -638,4 +645,59 @@ public class LeadController {
         model.addAttribute("folders", folders);
         model.addAttribute("hasGoogleDriveAccess", hasGoogleDriveAccess);
     }
+
+    @GetMapping("/add-expense/{leadId}")
+    public String showAddExpenseForm(@PathVariable("leadId") int leadId, Model model, Authentication authentication) {
+        int userId = authenticationUtils.getLoggedInUserId(authentication);
+        User loggedInUser = userService.findById(userId);
+        if (loggedInUser.isInactiveUser()) {
+            return "error/account-inactive";
+        }
+
+        Lead lead = leadService.findByLeadId(leadId);
+        if (lead == null) {
+            return "error/not-found";
+        }
+
+        if (!AuthorizationUtil.checkIfUserAuthorized(lead.getEmployee(), loggedInUser) && !AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
+            return "error/access-denied";
+        }
+
+        model.addAttribute("leadId", leadId);
+        return "lead/add-expense";
+    }
+
+    @PostMapping("/add-expense")
+    public String addExpense(@RequestParam("leadId") int leadId,
+                            @RequestParam("amount") double amount,
+                            @RequestParam("expenseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expenseDate,
+                            Authentication authentication) {
+
+        int userId = authenticationUtils.getLoggedInUserId(authentication);
+        User loggedInUser = userService.findById(userId);
+        if (loggedInUser.isInactiveUser()) {
+            return "error/account-inactive";
+        }
+
+        Lead lead = leadService.findByLeadId(leadId);
+        if (lead == null) {
+            return "error/not-found";
+        }
+
+        // Check if the user is authorized to add an expense for this lead
+        if (!AuthorizationUtil.checkIfUserAuthorized(lead.getEmployee(), loggedInUser) && !AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
+            return "error/access-denied";
+        }
+
+        // Create and save the expense
+        Expense expense = new Expense(amount, expenseDate);
+        expenseRepository.save(expense);
+
+        // Link the expense to the lead
+        lead.setExpense(expense);
+        leadService.save(lead);
+
+        return "redirect:/employee/lead/assigned-leads";
+    }
+
 }

@@ -1,6 +1,5 @@
 package site.easy.to.build.crm.service.lead;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -9,19 +8,15 @@ import org.springframework.stereotype.Service;
 
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Lead;
-import site.easy.to.build.crm.entity.LeadExpense;
-import site.easy.to.build.crm.repository.LeadExpenseRepository;
 import site.easy.to.build.crm.repository.LeadRepository;
 
 @Service
 public class LeadServiceImpl implements LeadService {
 
     private final LeadRepository leadRepository;
-    private final LeadExpenseRepository leadExpenseRepository;
 
-    public LeadServiceImpl(LeadRepository leadRepository, LeadExpenseRepository leadExpenseRepository) {
+    public LeadServiceImpl(LeadRepository leadRepository) {
         this.leadRepository = leadRepository;
-        this.leadExpenseRepository = leadExpenseRepository;
     }
 
     @Override
@@ -100,22 +95,7 @@ public class LeadServiceImpl implements LeadService {
     public long countByCustomerId(int customerId) {
         return leadRepository.countByCustomerCustomerId(customerId);
     }
-
-    @Override
-    public BigDecimal getLeadTotalAmount(Lead lead) {
-        List<LeadExpense> leadExpenses = this.leadExpenseRepository.findAll();
-        BigDecimal amount = BigDecimal.ZERO;
-
-        for (LeadExpense leadExpense : leadExpenses) {
-            if (leadExpense.getLead().getLeadId() == lead.getLeadId()) {
-                amount = amount.add(leadExpense.getAmount());
-            }
-        }
-        
-        return amount;
-    }
-
-    @Override
+    
     public List<Lead> findByCustomer(Customer customer) {
         return this.leadRepository.findByCustomerCustomerId(customer.getCustomerId());
     }   

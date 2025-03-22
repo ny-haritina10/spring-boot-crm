@@ -1,6 +1,5 @@
 package site.easy.to.build.crm.service.ticket;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import site.easy.to.build.crm.entity.Customer;
@@ -38,8 +37,6 @@ public interface TicketService {
     Ticket createRandomTicket();
 
     void generateRandomTicket(int number);
-
-    public BigDecimal getTicketTotalAmount(Ticket ticket);
 
     public List<Ticket> findByCustomer(Customer customer);
 }

@@ -108,6 +108,19 @@
                             <a th:href="${home + 'employee/ticket-expense/all'}">All ticket expenses</a>
                         </li>
                     </ul>
+
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                        <i class="fas fa-random"></i>
+                        <span class="hide-menu">Lead Expense</span>
+                    </a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li>
+                            <a th:href="${home + 'employee/lead-expense/create'}">Create lead expense</a>
+                        </li>
+                        <li>
+                            <a th:href="${home + 'employee/lead-expense/all'}">All lead expenses</a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-small-cap">--- Google Services</li>

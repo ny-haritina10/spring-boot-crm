@@ -111,7 +111,8 @@ public class TicketServiceImpl implements TicketService{
             save(ticket);
         }
     }
-    
+
+    @Override
     public List<Ticket> findByCustomer(Customer customer) {
         return this.ticketRepository.findByCustomerCustomerId(customer.getCustomerId());
     }

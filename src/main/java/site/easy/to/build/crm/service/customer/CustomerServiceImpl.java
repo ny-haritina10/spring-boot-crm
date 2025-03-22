@@ -10,13 +10,14 @@ import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.repository.CustomerBudgetRepository;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.service.lead.LeadService;
+import site.easy.to.build.crm.repository.CustomerRepository;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerBudgetRepository customerBudgetRepository, LeadService leadService) {
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 

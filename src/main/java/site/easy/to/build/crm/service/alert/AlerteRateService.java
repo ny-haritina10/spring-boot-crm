@@ -33,6 +33,9 @@ public class AlerteRateService {
     }
 
     public boolean isBudgetExceeded(BigDecimal expenseAmount, BigDecimal budget) {
+        System.out.println("Expense amount: " + expenseAmount.toString());
+        System.out.println("Budget amount: " + budget.toString());
+
         return expenseAmount.compareTo(budget) > 0;
     }
 }

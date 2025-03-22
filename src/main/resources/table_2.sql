@@ -15,15 +15,14 @@ CREATE TABLE IF NOT EXISTS `customer_budget` (
   CONSTRAINT `fk_budget_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Link table for ticket's expenses 
+
 CREATE TABLE IF NOT EXISTS `expense` (
   `expense_id` int unsigned NOT NULL AUTO_INCREMENT,
   `amount` decimal(15,2) NOT NULL,
   `expense_date` date NOT NULL,
-  PRIMARY KEY (`ticket_expense_id`),
+  PRIMARY KEY (`expense_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- taux alerte in percentage
 CREATE TABLE IF NOT EXISTS `alerte_rate` (
   `alerte_rate_id` int unsigned NOT NULL AUTO_INCREMENT,
   `percentage` decimal(15,2) NOT NULL,
@@ -33,3 +32,13 @@ CREATE TABLE IF NOT EXISTS `alerte_rate` (
 
 -- test values
 INSERT INTO `alerte_rate` (percentage) VALUES (50);
+
+
+-- alter
+ALTER TABLE `trigger_ticket` 
+ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
+ADD CONSTRAINT `fk_ticket_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);
+
+ALTER TABLE `trigger_lead` 
+ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
+ADD CONSTRAINT `fk_lead_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);

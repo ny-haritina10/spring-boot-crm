@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.entity.TicketExpense;
+import site.easy.to.build.crm.service.alert.AlerteRateService;
+import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.expense.TicketExpenseService;
 import site.easy.to.build.crm.service.ticket.TicketService;
 
@@ -23,11 +28,15 @@ public class TicketExpenseController {
 
     private final TicketExpenseService ticketExpenseService;
     private final TicketService ticketService;
+    private final AlerteRateService alerteRateService;
+    private final CustomerService customerService;
 
     @Autowired
-    public TicketExpenseController(TicketExpenseService ticketExpenseService, TicketService ticketService) {
+    public TicketExpenseController(TicketExpenseService ticketExpenseService, TicketService ticketService, AlerteRateService alerteRateService, CustomerService customerService) {
         this.ticketExpenseService = ticketExpenseService;
         this.ticketService = ticketService;
+        this.alerteRateService = alerteRateService;
+        this.customerService = customerService;
     }
 
     @GetMapping("/show/{id}")
@@ -56,13 +65,30 @@ public class TicketExpenseController {
     }
 
     @PostMapping("/create")
-    public String createExpense(@ModelAttribute("ticketExpense") TicketExpense ticketExpense, BindingResult bindingResult, Model model) {
+    public String createExpense(@ModelAttribute("ticketExpense") TicketExpense ticketExpense, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             List<Ticket> tickets = ticketService.findAll();
             model.addAttribute("tickets", tickets);
             return "ticket-expense/create-expense";
         }
+
         ticketExpenseService.save(ticketExpense);
+
+        // customer proprietaire du lead
+        Customer customer = ticketExpense.getTicket().getCustomer();
+
+        BigDecimal budget = this.customerService.getTotalBudget(customer);
+        BigDecimal totalLeadAmount = this.ticketService.getTicketTotalAmount(ticketExpense.getTicket());
+
+        if (alerteRateService.isBudgetExceeded(totalLeadAmount, budget)) {
+            redirectAttributes.addFlashAttribute("confirmationMessage", 
+                "Confirmation: Vous avez dépassé le budget.");
+        } else if (alerteRateService.isAlerteRateReached(totalLeadAmount, budget)) {
+            redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
+                alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+        }
+
+
         return "redirect:/employee/ticket-expense/all";
     }
 

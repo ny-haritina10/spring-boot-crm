@@ -78,28 +78,26 @@ public class CustomerServiceImpl implements CustomerService {
         List<CustomerBudget> budgets = this.customerBudgetRepository.findAll();
         
         for (CustomerBudget customerBudget : budgets) {
-            if (customerBudget.getCustomer().getCustomerId() == customer.getCustomerId()) {
-                allocatedBudget = allocatedBudget.add(customerBudget.getAmount());
-            }
+            if (customerBudget.getCustomer().getCustomerId() == customer.getCustomerId()) 
+            { allocatedBudget = allocatedBudget.add(customerBudget.getAmount()); }
         }
         
         BigDecimal usedBudget = calculateTotalExpenses(customer);
-        
         return allocatedBudget.subtract(usedBudget);
     }
 
     private BigDecimal calculateTotalExpenses(Customer customer) {
         BigDecimal totalExpenses = BigDecimal.ZERO;
         
+        // expense for leads
         List<Lead> customerLeads = this.leadService.findByCustomer(customer);
-        for (Lead lead : customerLeads) {
-            totalExpenses = totalExpenses.add(leadService.getLeadTotalAmount(lead));
-        }
+        for (Lead lead : customerLeads) 
+        { totalExpenses = totalExpenses.add(leadService.getLeadTotalAmount(lead)); }
         
+        // expense for tickets
         List<Ticket> customerTickets = this.ticketService.findByCustomer(customer);
-        for (Ticket ticket : customerTickets) {
-            totalExpenses = totalExpenses.add(ticketService.getTicketTotalAmount(ticket));
-        }
+        for (Ticket ticket : customerTickets) 
+        { totalExpenses = totalExpenses.add(ticketService.getTicketTotalAmount(ticket)); }
         
         return totalExpenses;
     }

@@ -107,9 +107,8 @@ public class LeadServiceImpl implements LeadService {
         BigDecimal amount = BigDecimal.ZERO;
 
         for (LeadExpense leadExpense : leadExpenses) {
-            if (leadExpense.getLead().getLeadId() == lead.getLeadId()) {
-                amount = amount.add(leadExpense.getAmount());
-            }
+            if (leadExpense.getLead().getLeadId() == lead.getLeadId()) 
+            { amount = amount.add(leadExpense.getAmount()); }
         }
         
         return amount;

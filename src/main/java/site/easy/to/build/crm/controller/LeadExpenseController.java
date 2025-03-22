@@ -76,27 +76,29 @@ public class LeadExpenseController {
             return "lead-expense/create-expense";
         }
 
-        // Get customer budget and lead amount before saving
         Customer customer = leadExpense.getLead().getCustomer();
-        BigDecimal budget = this.customerService.getTotalBudget(customer);
         
-        // Calculate the total amount including the new expense
-        BigDecimal currentLeadAmount = this.leadService.getLeadTotalAmount(leadExpense.getLead());
-        BigDecimal newTotalAmount = currentLeadAmount.add(leadExpense.getAmount());
-
-        if (alerteRateService.isBudgetExceeded(newTotalAmount, budget)) {
+        BigDecimal budget = this.customerService.getTotalBudget(customer);
+        BigDecimal expenseAmount = leadExpense.getAmount();
+        
+        if (alerteRateService.isBudgetExceeded(expenseAmount, budget)) {
             redirectAttributes.addFlashAttribute("pendingExpense", leadExpense);
             redirectAttributes.addFlashAttribute("exceedsBudget", true);
-            redirectAttributes.addFlashAttribute("currentAmount", currentLeadAmount);
+            redirectAttributes.addFlashAttribute("currentAmount", expenseAmount);
             redirectAttributes.addFlashAttribute("budget", budget);
+
+            System.out.println("[LD] Budget who needs confimation: " + budget);
             return "redirect:/employee/lead-expense/confirm";
         } else {
             leadExpenseService.save(leadExpense);
             
-            if (alerteRateService.isAlerteRateReached(newTotalAmount, budget)) {
+            if (alerteRateService.isAlerteRateReached(expenseAmount, budget)) {
                 redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
                     alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+                System.out.println("[LD] Budget who reach percentage alert: " + budget);
             }
+
+            System.out.println("[LD] Budget Final: " + budget);
             return "redirect:/employee/lead-expense/all";
         }
     }

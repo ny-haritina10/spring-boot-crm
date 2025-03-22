@@ -123,9 +123,8 @@ public class TicketServiceImpl implements TicketService{
         BigDecimal amount = BigDecimal.ZERO;
 
         for (TicketExpense ticketExpense : ticketExpenses) {
-            if (ticketExpense.getTicket().getTicketId() == ticket.getTicketId()) {
-                amount = amount.add(ticketExpense.getAmount());
-            }
+            if (ticketExpense.getTicket().getTicketId() == ticket.getTicketId()) 
+            { amount = amount.add(ticketExpense.getAmount()); }
         }
         
         return amount;

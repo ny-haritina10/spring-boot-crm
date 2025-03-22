@@ -75,26 +75,28 @@ public class TicketExpenseController {
         }
 
         Customer customer = ticketExpense.getTicket().getCustomer();
+
         BigDecimal budget = this.customerService.getTotalBudget(customer);
+        BigDecimal expenseAmount = ticketExpense.getAmount();
         
-        BigDecimal currentTicketAmount = this.ticketService.getTicketTotalAmount(ticketExpense.getTicket());
-        BigDecimal newTotalAmount = currentTicketAmount.add(ticketExpense.getAmount());
-
-        System.out.println("Current budget: " + budget.toString());
-
-        if (alerteRateService.isBudgetExceeded(newTotalAmount, budget)) {
+        if (alerteRateService.isBudgetExceeded(expenseAmount, budget)) {
             redirectAttributes.addFlashAttribute("pendingExpense", ticketExpense);
             redirectAttributes.addFlashAttribute("exceedsBudget", true);
-            redirectAttributes.addFlashAttribute("currentAmount", currentTicketAmount);
+            redirectAttributes.addFlashAttribute("currentAmount", expenseAmount);
             redirectAttributes.addFlashAttribute("budget", budget);
+
+            System.out.println("[TK] Budget who needs confimation: " + budget);
             return "redirect:/employee/ticket-expense/confirm";
         } else {
             ticketExpenseService.save(ticketExpense);
             
-            if (alerteRateService.isAlerteRateReached(newTotalAmount, budget)) {
+            if (alerteRateService.isAlerteRateReached(expenseAmount, budget)) {
                 redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
                     alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+                System.out.println("[TK] Budget who reach percentage alert: " + budget);
             }
+
+            System.out.println("[TK] Budget Final: " + budget);
             return "redirect:/employee/ticket-expense/all";
         }
     }

@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.service.lead;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import site.easy.to.build.crm.entity.Customer;
@@ -30,6 +31,10 @@ public interface LeadService {
     long countByCustomerId(int customerId);
 
     List<Lead> getRecentLeadsByEmployee(int employeeId, int limit);
+
     List<Lead> getRecentCustomerLeads(int customerId, int limit);
+
     public void deleteAllByCustomer(Customer customer);
+
+    public BigDecimal getLeadTotalAmount(Lead lead);
 }

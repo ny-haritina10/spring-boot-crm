@@ -66,30 +66,55 @@ public class LeadExpenseController {
     }
 
     @PostMapping("/create")
-    public String createExpense(@ModelAttribute("leadExpense") LeadExpense leadExpense, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String createExpense(@ModelAttribute("leadExpense") LeadExpense leadExpense, 
+                            BindingResult bindingResult, Model model, 
+                            RedirectAttributes redirectAttributes) 
+    {
         if (bindingResult.hasErrors()) {
             List<Lead> leads = leadService.findAll();
             model.addAttribute("leads", leads);
             return "lead-expense/create-expense";
         }
 
-        // save the lead expense
-        leadExpenseService.save(leadExpense);
-
-        // customer proprietaire du lead
+        // Get customer budget and lead amount before saving
         Customer customer = leadExpense.getLead().getCustomer();
-
         BigDecimal budget = this.customerService.getTotalBudget(customer);
-        BigDecimal totalLeadAmount = this.leadService.getLeadTotalAmount(leadExpense.getLead());
-
-        if (alerteRateService.isBudgetExceeded(totalLeadAmount, budget)) {
-            redirectAttributes.addFlashAttribute("confirmationMessage", 
-                "Confirmation: Vous avez dépassé le budget.");
-        } else if (alerteRateService.isAlerteRateReached(totalLeadAmount, budget)) {
-            redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
-                alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
-        }
         
+        // Calculate the total amount including the new expense
+        BigDecimal currentLeadAmount = this.leadService.getLeadTotalAmount(leadExpense.getLead());
+        BigDecimal newTotalAmount = currentLeadAmount.add(leadExpense.getAmount());
+
+        if (alerteRateService.isBudgetExceeded(newTotalAmount, budget)) {
+            redirectAttributes.addFlashAttribute("pendingExpense", leadExpense);
+            redirectAttributes.addFlashAttribute("exceedsBudget", true);
+            redirectAttributes.addFlashAttribute("currentAmount", currentLeadAmount);
+            redirectAttributes.addFlashAttribute("budget", budget);
+            return "redirect:/employee/lead-expense/confirm";
+        } else {
+            leadExpenseService.save(leadExpense);
+            
+            if (alerteRateService.isAlerteRateReached(newTotalAmount, budget)) {
+                redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
+                    alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+            }
+            return "redirect:/employee/lead-expense/all";
+        }
+    }
+
+    // Add new endpoint for confirmation page
+    @GetMapping("/confirm")
+    public String showConfirmationPage() {
+        return "lead-expense/confirm-expense";
+    }
+
+    // Add new endpoint to handle confirmation
+    @PostMapping("/confirm")
+    public String confirmExpense(@ModelAttribute("leadExpense") LeadExpense leadExpense,
+                                RedirectAttributes redirectAttributes) {
+        // Save the expense after user confirmation
+        leadExpenseService.save(leadExpense);
+        redirectAttributes.addFlashAttribute("confirmationMessage", 
+            "Expense saved despite exceeding the budget.");
         return "redirect:/employee/lead-expense/all";
     }
 

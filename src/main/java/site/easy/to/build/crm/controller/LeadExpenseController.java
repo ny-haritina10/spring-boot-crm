@@ -82,17 +82,12 @@ public class LeadExpenseController {
         BigDecimal budget = this.customerService.getTotalBudget(customer);
         BigDecimal totalLeadAmount = this.leadService.getLeadTotalAmount(leadExpense.getLead());
 
-        System.out.println("budget customer: " + budget.toString());
-        System.out.println("total lead budget: " + totalLeadAmount.toString());
-
         if (alerteRateService.isBudgetExceeded(totalLeadAmount, budget)) {
             redirectAttributes.addFlashAttribute("confirmationMessage", 
                 "Confirmation: Vous avez dépassé le budget.");
-            System.out.println("budget exceed");
         } else if (alerteRateService.isAlerteRateReached(totalLeadAmount, budget)) {
             redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
                 alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
-            System.out.println("budget reached");
         }
         
         return "redirect:/employee/lead-expense/all";

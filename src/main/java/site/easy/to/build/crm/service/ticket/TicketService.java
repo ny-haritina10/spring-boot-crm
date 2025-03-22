@@ -40,4 +40,6 @@ public interface TicketService {
     void generateRandomTicket(int number);
 
     public BigDecimal getTicketTotalAmount(Ticket ticket);
+
+    public List<Ticket> findByCustomer(Customer customer);
 }

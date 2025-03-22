@@ -65,30 +65,51 @@ public class TicketExpenseController {
     }
 
     @PostMapping("/create")
-    public String createExpense(@ModelAttribute("ticketExpense") TicketExpense ticketExpense, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String createExpense(@ModelAttribute("ticketExpense") TicketExpense ticketExpense, 
+                            BindingResult bindingResult, Model model, 
+                            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             List<Ticket> tickets = ticketService.findAll();
             model.addAttribute("tickets", tickets);
             return "ticket-expense/create-expense";
         }
 
-        ticketExpenseService.save(ticketExpense);
-
-        // customer proprietaire du lead
         Customer customer = ticketExpense.getTicket().getCustomer();
-
         BigDecimal budget = this.customerService.getTotalBudget(customer);
-        BigDecimal totalLeadAmount = this.ticketService.getTicketTotalAmount(ticketExpense.getTicket());
+        
+        BigDecimal currentTicketAmount = this.ticketService.getTicketTotalAmount(ticketExpense.getTicket());
+        BigDecimal newTotalAmount = currentTicketAmount.add(ticketExpense.getAmount());
 
-        if (alerteRateService.isBudgetExceeded(totalLeadAmount, budget)) {
-            redirectAttributes.addFlashAttribute("confirmationMessage", 
-                "Confirmation: Vous avez dépassé le budget.");
-        } else if (alerteRateService.isAlerteRateReached(totalLeadAmount, budget)) {
-            redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
-                alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+        System.out.println("Current budget: " + budget.toString());
+
+        if (alerteRateService.isBudgetExceeded(newTotalAmount, budget)) {
+            redirectAttributes.addFlashAttribute("pendingExpense", ticketExpense);
+            redirectAttributes.addFlashAttribute("exceedsBudget", true);
+            redirectAttributes.addFlashAttribute("currentAmount", currentTicketAmount);
+            redirectAttributes.addFlashAttribute("budget", budget);
+            return "redirect:/employee/ticket-expense/confirm";
+        } else {
+            ticketExpenseService.save(ticketExpense);
+            
+            if (alerteRateService.isAlerteRateReached(newTotalAmount, budget)) {
+                redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
+                    alerteRateService.getLatestAlerteRatePercentage() + "% du budget.");
+            }
+            return "redirect:/employee/ticket-expense/all";
         }
+    }
 
+    @GetMapping("/confirm")
+    public String showConfirmationPage() {
+        return "ticket-expense/confirm-expense";
+    }
 
+    @PostMapping("/confirm")
+    public String confirmExpense(@ModelAttribute("pendingExpense") TicketExpense ticketExpense,
+                                RedirectAttributes redirectAttributes) {
+        ticketExpenseService.save(ticketExpense);
+        redirectAttributes.addFlashAttribute("confirmationMessage", 
+            "Expense saved despite exceeding the budget.");
         return "redirect:/employee/ticket-expense/all";
     }
 

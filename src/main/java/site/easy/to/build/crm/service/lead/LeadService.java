@@ -10,6 +10,8 @@ public interface LeadService {
     
     public Lead findByLeadId(int id);
 
+    public List<Lead> findByCustomer(Customer customer);
+
     public List<Lead> findAll();
 
     public List<Lead> findAssignedLeads(int userId);

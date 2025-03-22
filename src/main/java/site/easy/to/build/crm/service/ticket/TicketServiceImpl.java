@@ -130,4 +130,9 @@ public class TicketServiceImpl implements TicketService{
         
         return amount;
     }
+
+    @Override
+    public List<Ticket> findByCustomer(Customer customer) {
+        return this.ticketRepository.findByCustomerCustomerId(customer.getCustomerId());
+    }
 }

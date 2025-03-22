@@ -114,4 +114,9 @@ public class LeadServiceImpl implements LeadService {
         
         return amount;
     }
+
+    @Override
+    public List<Lead> findByCustomer(Customer customer) {
+        return this.leadRepository.findByCustomerCustomerId(customer.getCustomerId());
+    }   
 }

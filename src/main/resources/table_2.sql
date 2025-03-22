@@ -30,3 +30,12 @@ CREATE TABLE IF NOT EXISTS `alerte_rate` (
   `alerte_rate_date` datetime DEFAULT CURRENT_TIMESTAMP ,
   PRIMARY KEY (`alerte_rate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- alter
+ALTER TABLE `trigger_ticket` 
+ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
+ADD CONSTRAINT `fk_ticket_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);
+
+ALTER TABLE `trigger_lead` 
+ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
+ADD CONSTRAINT `fk_lead_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);

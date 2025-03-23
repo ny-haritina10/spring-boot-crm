@@ -434,16 +434,9 @@ public class TicketController {
         
         Customer customer = ticket.getCustomer();
         
-        // Calculate current used budget
         BigDecimal currentUsedBudget = customerService.calculateTotalExpenses(customer);
-        
-        // Calculate the total budget allocation (not the remaining)
         BigDecimal totalAllocatedBudget = customerService.getTotalAllocatedBudget(customer);
-        
-        // Calculate what the total used budget would be after this expense
         BigDecimal projectedTotalUsed = currentUsedBudget.add(newExpenseAmount);
-        
-        // Calculate remaining budget
         BigDecimal remainingBudget = totalAllocatedBudget.subtract(currentUsedBudget);
         
         System.out.println("Debug: Total allocated budget: " + totalAllocatedBudget);
@@ -452,7 +445,6 @@ public class TicketController {
         System.out.println("Debug: Remaining budget: " + remainingBudget);
         System.out.println("Debug: Projected total used: " + projectedTotalUsed);
 
-        // Check if adding this expense would exceed the total budget
         if (projectedTotalUsed.compareTo(totalAllocatedBudget) > 0) {
             redirectAttributes.addFlashAttribute("pendingTicket", ticket);
             redirectAttributes.addFlashAttribute("pendingExpense", expense);

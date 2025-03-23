@@ -39,3 +39,23 @@ ADD CONSTRAINT `fk_ticket_expense` FOREIGN KEY (`expense_id`) REFERENCES `expens
 ALTER TABLE `trigger_lead` 
 ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
 ADD CONSTRAINT `fk_lead_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);
+
+
+INSERT INTO `expense` (`amount`, `expense_date`) VALUES
+(1000.50, '2023-10-01'),
+(200.75, '2023-10-05'),
+(150.00, '2023-10-10'),
+(300.25, '2023-11-01'),
+(250.50, '2023-11-15'),
+(400.00, '2023-12-01'),
+(350.75, '2023-12-10');
+
+
+INSERT INTO `customer_budget` (`customer_id`, `label`, `amount`, `transaction_date`) VALUES
+(1, 'Initial Budget', 1000.00, '2023-10-01'),
+(1, 'Additional Budget', 500.00, '2023-10-15'),
+(2, 'Project Budget', 2000.00, '2023-10-05'),
+(1, 'Q4 Budget', 1500.00, '2023-11-01'),
+(2, 'Marketing Budget', 1000.00, '2023-11-10'),
+(1, 'Year-End Budget', 3000.00, '2023-12-01'),
+(2, 'Final Budget', 2000.00, '2023-12-15');

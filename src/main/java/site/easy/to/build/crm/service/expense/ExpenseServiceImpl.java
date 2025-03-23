@@ -1,5 +1,7 @@
 package site.easy.to.build.crm.service.expense;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,4 +37,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void deleteById(int id) {
         expenseRepository.deleteById(id);
     }
+
+    @Override
+    public List<Expense> findAll() {
+        return expenseRepository.findAll();
+    }    
 }

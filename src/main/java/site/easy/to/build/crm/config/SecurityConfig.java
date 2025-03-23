@@ -157,6 +157,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() // Allow preflight requests
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/dashboard/**").authenticated() // Require auth for dashboard
+                .requestMatchers("/api/alerte-rates/**").permitAll() // Add this if you want public access
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(userService), UsernamePasswordAuthenticationFilter.class);

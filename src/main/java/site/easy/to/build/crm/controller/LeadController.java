@@ -3,6 +3,8 @@ package site.easy.to.build.crm.controller;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,6 +62,7 @@ import site.easy.to.build.crm.google.service.calendar.GoogleCalendarApiService;
 import site.easy.to.build.crm.google.service.drive.GoogleDriveApiService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
 import site.easy.to.build.crm.repository.ExpenseRepository;
+import site.easy.to.build.crm.service.alert.AlerteRateService;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.drive.GoogleDriveFileService;
 import site.easy.to.build.crm.service.file.FileService;
@@ -91,13 +95,17 @@ public class LeadController {
     private final GoogleGmailApiService googleGmailApiService;
     private final EntityManager entityManager;
     private final ExpenseRepository expenseRepository;
+    private final AlerteRateService alerteRateService;
+
 
     @Autowired
     public LeadController(LeadService leadService, AuthenticationUtils authenticationUtils, UserService userService, CustomerService customerService,
                           LeadActionService leadActionService, GoogleCalendarApiService googleCalendarApiService, FileService fileService,
                           GoogleDriveApiService googleDriveApiService, GoogleDriveFileService googleDriveFileService, FileUtil fileUtil,
                           LeadEmailSettingsService leadEmailSettingsService, GoogleGmailApiService googleGmailApiService, EntityManager entityManager,
-                          ExpenseRepository expenseRepository) {
+                          ExpenseRepository expenseRepository,
+                          AlerteRateService alerteRateService
+                          ) {
         this.leadService = leadService;
         this.authenticationUtils = authenticationUtils;
         this.userService = userService;
@@ -112,6 +120,7 @@ public class LeadController {
         this.googleGmailApiService = googleGmailApiService;
         this.entityManager = entityManager;
         this.expenseRepository = expenseRepository;
+        this.alerteRateService = alerteRateService;
     }
 
     @GetMapping("/show/{id}")
@@ -671,7 +680,8 @@ public class LeadController {
     public String addExpense(@RequestParam("leadId") int leadId,
                             @RequestParam("amount") double amount,
                             @RequestParam("expenseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expenseDate,
-                            Authentication authentication) {
+                            Authentication authentication,
+                            RedirectAttributes redirectAttributes) {
 
         int userId = authenticationUtils.getLoggedInUserId(authentication);
         User loggedInUser = userService.findById(userId);
@@ -689,15 +699,85 @@ public class LeadController {
             return "error/access-denied";
         }
 
-        // Create and save the expense
         Expense expense = new Expense(amount, expenseDate);
-        expenseRepository.save(expense);
+        BigDecimal newExpenseAmount = new BigDecimal(amount);
+        
+        Customer customer = lead.getCustomer();
+        
+        // Calculate current used budget
+        BigDecimal currentUsedBudget = customerService.calculateTotalExpenses(customer);
+        
+        // Calculate the total budget allocation (not the remaining)
+        BigDecimal totalAllocatedBudget = customerService.getTotalAllocatedBudget(customer);
+        
+        // Calculate what the total used budget would be after this expense
+        BigDecimal projectedTotalUsed = currentUsedBudget.add(newExpenseAmount);
+        
+        // Calculate remaining budget
+        BigDecimal remainingBudget = totalAllocatedBudget.subtract(currentUsedBudget);
+        
+        System.out.println("Debug: Total allocated budget: " + totalAllocatedBudget);
+        System.out.println("Debug: Current used budget: " + currentUsedBudget);
+        System.out.println("Debug: New expense amount: " + newExpenseAmount);
+        System.out.println("Debug: Remaining budget: " + remainingBudget);
+        System.out.println("Debug: Projected total used: " + projectedTotalUsed);
 
-        // Link the expense to the lead
+        // Check if adding this expense would exceed the total budget
+        if (projectedTotalUsed.compareTo(totalAllocatedBudget) > 0) {
+            redirectAttributes.addFlashAttribute("pendingLead", lead);
+            redirectAttributes.addFlashAttribute("pendingExpense", expense);
+            redirectAttributes.addFlashAttribute("exceedsBudget", true);
+            redirectAttributes.addFlashAttribute("currentAmount", newExpenseAmount);
+            redirectAttributes.addFlashAttribute("budget", remainingBudget);
+            redirectAttributes.addFlashAttribute("totalBudget", totalAllocatedBudget);
+
+            System.out.println("Debug: Require confirmation - budget would be exceeded");
+            return "redirect:/employee/lead/confirm";
+        } else {
+            // Save the expense since it doesn't exceed the budget
+            expenseRepository.save(expense);
+            lead.setExpense(expense);
+            leadService.save(lead);
+
+            // Check if the alert threshold is reached
+            BigDecimal alertPercentage = alerteRateService.getLatestAlerteRatePercentage();
+            BigDecimal alertThreshold = totalAllocatedBudget.multiply(alertPercentage)
+                                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            
+            if (projectedTotalUsed.compareTo(alertThreshold) >= 0) {
+                BigDecimal usedPercentage = projectedTotalUsed.multiply(BigDecimal.valueOf(100))
+                                        .divide(totalAllocatedBudget, 2, RoundingMode.HALF_UP);
+                
+                redirectAttributes.addFlashAttribute("alertMessage", "Alerte: Vous avez atteint " + 
+                    usedPercentage.setScale(1, RoundingMode.HALF_UP) + "% du budget total.");
+
+                System.out.println("Debug: Alert percentage reached: " + usedPercentage + "%");
+            }
+
+            return "redirect:/employee/lead/assigned-leads";
+        }
+    }
+
+    @GetMapping("/confirm")
+    public String showConfirmationPage() {
+        return "lead/confirm-expense";
+    }
+
+    @PostMapping("/confirm")
+    public String confirmExpense(@ModelAttribute("pendingLead") Lead lead,
+                                @ModelAttribute("pendingExpense") Expense expense,
+                                RedirectAttributes redirectAttributes) {
+        if (lead == null || expense == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid lead or expense data.");
+            return "redirect:/employee/lead/assigned-leads";
+        }
+
+        expenseRepository.save(expense);
         lead.setExpense(expense);
         leadService.save(lead);
 
+        redirectAttributes.addFlashAttribute("confirmationMessage", 
+            "Expense saved despite exceeding the budget.");
         return "redirect:/employee/lead/assigned-leads";
     }
-
 }

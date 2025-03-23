@@ -13,39 +13,40 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import site.easy.to.build.crm.config.jwt.JwtAuthenticationFilter;
 import site.easy.to.build.crm.config.oauth2.CustomOAuth2UserService;
 import site.easy.to.build.crm.config.oauth2.OAuthLoginSuccessHandler;
-
-
+import site.easy.to.build.crm.service.user.UserService;
 
 @Configuration
 public class SecurityConfig {
 
-
     private final OAuthLoginSuccessHandler oAuth2LoginSuccessHandler;
-
     private final CustomOAuth2UserService oauthUserService;
-
     private final CrmUserDetails crmUserDetails;
-
     private final CustomerUserDetails customerUserDetails;
-
     private final Environment environment;
+    private final UserService userService;
 
     @Autowired
-    public SecurityConfig(OAuthLoginSuccessHandler oAuth2LoginSuccessHandler, CustomOAuth2UserService oauthUserService, CrmUserDetails crmUserDetails,
-                          CustomerUserDetails customerUserDetails, Environment environment) {
+    public SecurityConfig(OAuthLoginSuccessHandler oAuth2LoginSuccessHandler, 
+                        CustomOAuth2UserService oauthUserService,
+                        CrmUserDetails crmUserDetails, 
+                        CustomerUserDetails customerUserDetails, 
+                        Environment environment,
+                        UserService userService) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.oauthUserService = oauthUserService;
         this.crmUserDetails = crmUserDetails;
         this.customerUserDetails = customerUserDetails;
         this.environment = environment;
+        this.userService = userService;
     }
 
-    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -54,53 +55,46 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
         httpSessionCsrfTokenRepository.setParameterName("csrf");
 
-        http.csrf((csrf) -> csrf
-                .csrfTokenRepository(httpSessionCsrfTokenRepository)
-        );
+        http.csrf(csrf -> csrf.csrfTokenRepository(httpSessionCsrfTokenRepository));
 
-        http.
-                authorizeHttpRequests((authorize) -> authorize
-
-                        .requestMatchers("/api/auth/**").permitAll()  
-                        .requestMatchers("/register/**").permitAll()
-                        .requestMatchers("/set-employee-password/**").permitAll()
-                        .requestMatchers("/change-password/**").permitAll()
-                        .requestMatchers("/font-awesome/**").permitAll()
-                        .requestMatchers("/fonts/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/save").permitAll()
-                        .requestMatchers("/js/**").permitAll()
-                        .requestMatchers("/css/**").permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/**/manager/**")).hasRole("MANAGER")
-                        .requestMatchers("/employee/**").hasAnyRole("MANAGER", "EMPLOYEE")
-                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
-                        .anyRequest().authenticated()
-                )
-
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login")
-                        .permitAll()
-                ).userDetailsService(crmUserDetails)
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oauthUserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                ).logout((logout) -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        .permitAll())
-                .exceptionHandling(exception -> {
-                    exception.accessDeniedHandler(accessDeniedHandler());
-                });
-
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/register/**").permitAll()
+                .requestMatchers("/set-employee-password/**").permitAll()
+                .requestMatchers("/change-password/**").permitAll()
+                .requestMatchers("/font-awesome/**").permitAll()
+                .requestMatchers("/fonts/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/save").permitAll()
+                .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/**/manager/**")).hasRole("MANAGER")
+                .requestMatchers("/employee/**").hasAnyRole("MANAGER", "EMPLOYEE")
+                .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                .anyRequest().authenticated()
+        )
+        .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login")
+                .permitAll()
+        )
+        .userDetailsService(crmUserDetails)
+        .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService))
+                .successHandler(oAuth2LoginSuccessHandler)
+        )
+        .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .permitAll()
+        )
+        .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler()));
 
         return http.build();
     }
@@ -113,51 +107,50 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain customerSecurityFilterChain(HttpSecurity http) throws Exception {
-
-
         HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
         httpSessionCsrfTokenRepository.setParameterName("csrf");
 
-        http.csrf((csrf) -> csrf
-                .csrfTokenRepository(httpSessionCsrfTokenRepository)
-        );
+        http.csrf(csrf -> csrf.csrfTokenRepository(httpSessionCsrfTokenRepository));
 
-        http.securityMatcher("/customer-login/**").
-                authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/set-password/**").permitAll()
-                        .requestMatchers("/font-awesome/**").permitAll()
-                        .requestMatchers("/fonts/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/js/**").permitAll()
-                        .requestMatchers("/css/**").permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/**/manager/**")).hasRole("MANAGER")
-                        .anyRequest().authenticated()
-                )
-
-                .formLogin((form) -> form
-                        .loginPage("/customer-login")
-                        .loginProcessingUrl("/customer-login")
-                        .failureUrl("/customer-login")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()).userDetailsService(customerUserDetails)
-                .logout((logout) -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/customer-login")
-                        .permitAll());
+        http.securityMatcher("/customer-login/**")
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/set-password/**").permitAll()
+                .requestMatchers("/font-awesome/**").permitAll()
+                .requestMatchers("/fonts/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/**/manager/**")).hasRole("MANAGER")
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/customer-login")
+                .loginProcessingUrl("/customer-login")
+                .failureUrl("/customer-login")
+                .defaultSuccessUrl("/", true)
+                .permitAll()
+            )
+            .userDetailsService(customerUserDetails)
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/customer-login")
+                .permitAll()
+            );
 
         return http.build();
     }
 
     @Bean
-    @Order(0)  // Higher priority than other chains
+    @Order(0)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**")
-            .csrf((csrf) -> csrf.disable())  
+            .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
-            );
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(userService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

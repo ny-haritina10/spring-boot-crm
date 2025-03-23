@@ -3,6 +3,7 @@ package site.easy.to.build.crm.controller;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -696,6 +697,9 @@ public class LeadController {
         // Link the expense to the lead
         lead.setExpense(expense);
         leadService.save(lead);
+
+        BigDecimal customerBudget = this.customerService.getTotalBudget(lead.getCustomer());
+        System.out.println("[LD] Customer budget: " + customerBudget);
 
         return "redirect:/employee/lead/assigned-leads";
     }

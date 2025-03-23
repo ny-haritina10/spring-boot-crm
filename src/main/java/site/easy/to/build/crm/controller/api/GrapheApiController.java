@@ -32,16 +32,16 @@ public class GrapheApiController {
 
     @Autowired
     public GrapheApiController(TicketService ticketService,
-                                ExpenseService expenseService,
-                                CustomerService customerService,
-                                CustomerBudgetService customerBudgetService) {
+                              ExpenseService expenseService,
+                              CustomerService customerService,
+                              CustomerBudgetService customerBudgetService) {
         this.ticketService = ticketService;
         this.expenseService = expenseService;
         this.customerService = customerService;
         this.customerBudgetService = customerBudgetService;
     }
 
-    // DTO for Ticket Status Distribution (Pie Chart)
+    // DTO classes and endpoint methods remain the same
     public static class TicketStatusDTO {
         private String status;
         private long count;
@@ -50,62 +50,48 @@ public class GrapheApiController {
             this.status = status;
             this.count = count;
         }
-
-        // Getters
         public String getStatus() { return status; }
         public long getCount() { return count; }
     }
 
-    // DTO for Monthly Expenses (Bar Chart)
     public static class MonthlyExpenseDTO {
-        private String month; // Format: "YYYY-MM"
+        private String month;
         private double totalAmount;
 
         public MonthlyExpenseDTO(String month, double totalAmount) {
             this.month = month;
             this.totalAmount = totalAmount;
         }
-
-        // Getters
         public String getMonth() { return month; }
         public double getTotalAmount() { return totalAmount; }
     }
 
-    // DTO for Budget Evolution (Line Chart)
     public static class BudgetEvolutionDTO {
-        private String date; // Format: "YYYY-MM"
+        private String date;
         private BigDecimal totalBudget;
 
         public BudgetEvolutionDTO(String date, BigDecimal totalBudget) {
             this.date = date;
             this.totalBudget = totalBudget;
         }
-
-        // Getters
         public String getDate() { return date; }
         public BigDecimal getTotalBudget() { return totalBudget; }
     }
 
-    // Endpoint 1: Ticket Status Distribution for Pie Chart
     @GetMapping("/ticket-status")
     public ResponseEntity<?> getTicketStatusDistribution() {
         try {
             List<Ticket> tickets = ticketService.findAll();
             Map<String, Long> statusCount = tickets.stream()
-                .collect(Collectors.groupingBy(
-                    Ticket::getStatus,
-                    Collectors.counting()
-                ));
+                .collect(Collectors.groupingBy(Ticket::getStatus, Collectors.counting()));
 
             List<TicketStatusDTO> statusDistribution = statusCount.entrySet().stream()
                 .map(entry -> new TicketStatusDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
             if (statusDistribution.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No ticket status data found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket status data found");
             }
-
             return ResponseEntity.ok(statusDistribution);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -113,7 +99,6 @@ public class GrapheApiController {
         }
     }
 
-    // Endpoint 2: Monthly Expenses for Bar Chart
     @GetMapping("/monthly-expenses")
     public ResponseEntity<?> getMonthlyExpenses() {
         try {
@@ -125,18 +110,13 @@ public class GrapheApiController {
                 ));
 
             List<MonthlyExpenseDTO> monthlyExpenses = monthlyTotals.entrySet().stream()
-                .map(entry -> new MonthlyExpenseDTO(
-                    entry.getKey().toString(),
-                    entry.getValue()
-                ))
+                .map(entry -> new MonthlyExpenseDTO(entry.getKey().toString(), entry.getValue()))
                 .sorted((a, b) -> a.getMonth().compareTo(b.getMonth()))
                 .collect(Collectors.toList());
 
             if (monthlyExpenses.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No expense data found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No expense data found");
             }
-
             return ResponseEntity.ok(monthlyExpenses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -144,7 +124,6 @@ public class GrapheApiController {
         }
     }
 
-    // Endpoint 3: Customer Budget Evolution for Line Chart
     @GetMapping("/budget-evolution")
     public ResponseEntity<?> getBudgetEvolution() {
         try {
@@ -160,21 +139,15 @@ public class GrapheApiController {
                 ));
 
             List<BudgetEvolutionDTO> budgetEvolution = monthlyBudgets.entrySet().stream()
-                .map(entry -> new BudgetEvolutionDTO(
-                    entry.getKey().toString(),
-                    entry.getValue()
-                ))
+                .map(entry -> new BudgetEvolutionDTO(entry.getKey().toString(), entry.getValue()))
                 .sorted((a, b) -> a.getDate().compareTo(b.getDate()))
                 .collect(Collectors.toList());
 
             if (budgetEvolution.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No budget data found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No budget data found");
             }
-
             return ResponseEntity.ok(budgetEvolution);
         } catch (Exception e) {
-            // Log the error for debugging
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error retrieving budget evolution");

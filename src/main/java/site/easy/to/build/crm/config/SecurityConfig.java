@@ -1,10 +1,13 @@
 package site.easy.to.build.crm.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +19,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import site.easy.to.build.crm.config.jwt.JwtAuthenticationFilter;
 import site.easy.to.build.crm.config.oauth2.CustomOAuth2UserService;
@@ -34,11 +40,11 @@ public class SecurityConfig {
 
     @Autowired
     public SecurityConfig(OAuthLoginSuccessHandler oAuth2LoginSuccessHandler, 
-                        CustomOAuth2UserService oauthUserService,
-                        CrmUserDetails crmUserDetails, 
-                        CustomerUserDetails customerUserDetails, 
-                        Environment environment,
-                        UserService userService) {
+                         CustomOAuth2UserService oauthUserService,
+                         CrmUserDetails crmUserDetails, 
+                         CustomerUserDetails customerUserDetails, 
+                         Environment environment,
+                         UserService userService) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.oauthUserService = oauthUserService;
         this.crmUserDetails = crmUserDetails;
@@ -146,13 +152,30 @@ public class SecurityConfig {
         http.securityMatcher("/api/**")
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add CORS configuration
             .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() // Allow preflight requests
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/dashboard/**").authenticated() // Require auth for dashboard
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(userService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:8000", "http://localhost:8000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.controller.api;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,8 @@ import site.easy.to.build.crm.dto.TicketDTO;
 import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
+import site.easy.to.build.crm.service.alert.AlerteRateService;
+import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.expense.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
@@ -30,16 +33,22 @@ public class ExpenseApiController {
     private final TicketService ticketService;
     private final LeadService leadService;
     private final ExpenseService expenseService;
+    private final CustomerService customerService;
+    private final AlerteRateService alerteRateService;
 
     @Autowired
-    public ExpenseApiController(TicketService ticketService, LeadService leadService, 
-                              ExpenseService expenseService) {
+    public ExpenseApiController(TicketService ticketService, 
+                                LeadService leadService, 
+                                ExpenseService expenseService,
+                                CustomerService customerService,
+                                AlerteRateService alerteRateService) {
         this.ticketService = ticketService;
         this.leadService = leadService;
         this.expenseService = expenseService;
+        this.customerService = customerService;
+        this.alerteRateService = alerteRateService;
     }
 
-    // Update expense for a Ticket
     @PutMapping("/ticket/{ticketId}")
     public ResponseEntity<?> updateTicketExpense(@PathVariable int ticketId, 
                                                @RequestBody Expense updatedExpense) {
@@ -69,7 +78,6 @@ public class ExpenseApiController {
         }
     }
 
-    // Delete expense from a Ticket
     @DeleteMapping("/ticket/{ticketId}")
     public ResponseEntity<?> deleteTicketExpense(@PathVariable int ticketId) {
         try {
@@ -96,7 +104,6 @@ public class ExpenseApiController {
         }
     }
 
-    // Update expense for a Lead
     @PutMapping("/lead/{leadId}")
     public ResponseEntity<?> updateLeadExpense(@PathVariable int leadId, 
                                              @RequestBody Expense updatedExpense) {
@@ -126,7 +133,6 @@ public class ExpenseApiController {
         }
     }
 
-    // Delete expense from a Lead
     @DeleteMapping("/lead/{leadId}")
     public ResponseEntity<?> deleteLeadExpense(@PathVariable int leadId) {
         try {
@@ -166,8 +172,11 @@ public class ExpenseApiController {
                     ticket.getManager() != null ? ticket.getManager().getId() : null,
                     ticket.getEmployee() != null ? ticket.getEmployee().getId() : null,
                     ticket.getCustomer() != null ? ticket.getCustomer().getCustomerId() : null,
-                    ticket.getExpense() != null ? ticket.getExpense(): null,
-                    ticket.getCreatedAt()
+                    ticket.getExpense(),
+                    ticket.getCreatedAt(),
+                    ticket.getCustomer() != null ? customerService.getTotalAllocatedBudget(ticket.getCustomer()) : BigDecimal.ZERO,
+                    ticket.getCustomer() != null ? customerService.calculateTotalExpenses(ticket.getCustomer()) : BigDecimal.ZERO,
+                    alerteRateService.getLatestAlerteRatePercentage()
                 ))
                 .collect(Collectors.toList());
             
@@ -183,7 +192,6 @@ public class ExpenseApiController {
         }
     }
 
-    // Modified method to get all leads with expenses
     @GetMapping("/leads")
     public ResponseEntity<?> getAllLeadsWithExpenses() {
         try {
@@ -197,8 +205,11 @@ public class ExpenseApiController {
                     lead.getManager() != null ? lead.getManager().getId() : null,
                     lead.getEmployee() != null ? lead.getEmployee().getId() : null,
                     lead.getCustomer() != null ? lead.getCustomer().getCustomerId() : null,
-                    lead.getExpense() != null ? lead.getExpense(): null,
-                    lead.getCreatedAt()
+                    lead.getExpense(),
+                    lead.getCreatedAt(),
+                    lead.getCustomer() != null ? customerService.getTotalAllocatedBudget(lead.getCustomer()) : BigDecimal.ZERO,
+                    lead.getCustomer() != null ? customerService.calculateTotalExpenses(lead.getCustomer()) : BigDecimal.ZERO,
+                    alerteRateService.getLatestAlerteRatePercentage()
                 ))
                 .collect(Collectors.toList());
             

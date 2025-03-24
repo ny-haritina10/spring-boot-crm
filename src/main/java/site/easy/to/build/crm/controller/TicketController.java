@@ -481,23 +481,29 @@ public class TicketController {
     }
 
     @GetMapping("/confirm")
-    public String showConfirmationPage() {
+    public String showConfirmationPage(Model model, @ModelAttribute("pendingTicket") Ticket pendingTicket) {
+        if (pendingTicket != null) {
+            model.addAttribute("ticketId", pendingTicket.getTicketId());
+        }
         return "ticket/confirm-expense";
     }
 
     @PostMapping("/confirm")
-    public String confirmExpense(@ModelAttribute("pendingTicket") Ticket ticket,
-                                @ModelAttribute("pendingExpense") Expense expense,
+    public String confirmExpense(@RequestParam("ticketId") int ticketId,
+                                @RequestParam("amount") double amount,
+                                @RequestParam("expenseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expenseDate,
                                 RedirectAttributes redirectAttributes) {
-        if (ticket == null || expense == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid ticket or expense data.");
+        Ticket ticket = ticketService.findByTicketId(ticketId);
+        if (ticket == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid ticket data.");
             return "redirect:/employee/ticket/assigned-tickets";
         }
-    
+
+        Expense expense = new Expense(amount, expenseDate);
         expenseRepository.save(expense);
         ticket.setExpense(expense);
         ticketService.save(ticket);
-    
+
         redirectAttributes.addFlashAttribute("confirmationMessage", 
             "Expense saved despite exceeding the budget.");
         return "redirect:/employee/ticket/assigned-tickets";

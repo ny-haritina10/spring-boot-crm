@@ -26,9 +26,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <form th:action="@{/employee/lead/confirm}" method="post">
-                                        <!-- Use model attribute names that match the controller parameters -->
-                                        <input type="hidden" name="pendingLead" th:value="${pendingLead}" />
-                                        <input type="hidden" name="pendingExpense" th:value="${pendingExpense}" />
+                                        <input type="hidden" name="leadId" th:value="${pendingLead.leadId}" />
+                                        <input type="hidden" name="amount" th:value="${pendingExpense.amount}" />
+                                        <input type="hidden" name="expenseDate" th:value="${pendingExpense.expenseDate}" />
                                         
                                         <button type="submit" class="btn btn-danger">
                                             Confirm and Save Expense
@@ -36,7 +36,6 @@
                                     </form>
                                 </div>
                                 <div class="col-md-6">
-                                    <!-- Fixed the URL to correctly point to assigned-leads -->
                                     <a th:href="@{/employee/lead/assigned-leads}" class="btn btn-secondary">
                                         Cancel
                                     </a>

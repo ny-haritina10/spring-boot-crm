@@ -764,14 +764,17 @@ public class LeadController {
     }
 
     @PostMapping("/confirm")
-    public String confirmExpense(@ModelAttribute("pendingLead") Lead lead,
-                                @ModelAttribute("pendingExpense") Expense expense,
+    public String confirmExpense(@RequestParam("leadId") int leadId,
+                                @RequestParam("amount") double amount,
+                                @RequestParam("expenseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expenseDate,
                                 RedirectAttributes redirectAttributes) {
-        if (lead == null || expense == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid lead or expense data.");
+        Lead lead = leadService.findByLeadId(leadId);
+        if (lead == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid lead data.");
             return "redirect:/employee/lead/assigned-leads";
         }
 
+        Expense expense = new Expense(amount, expenseDate);
         expenseRepository.save(expense);
         lead.setExpense(expense);
         leadService.save(lead);

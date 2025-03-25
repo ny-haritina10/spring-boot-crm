@@ -35,7 +35,7 @@
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown u-pro">
                     <a class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" th:src="${#authentication.principal.picture}" alt="user" class="">
+                        <img th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" th:src="@{/images/pp.png}" alt="user" class="">
                         <img th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.User)}" th:src="@{/images/pp.png}">
                         <span class="hidden-md-down" >
                             <span th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}"

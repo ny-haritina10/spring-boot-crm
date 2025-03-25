@@ -21,13 +21,12 @@ public class DatabaseResetService {
             List<String> tables = jdbcTemplate.queryForList(
                 "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES " +
                 "WHERE TABLE_SCHEMA = DATABASE() " +
-                "AND TABLE_NAME NOT IN ('oauth_users', 'users', 'user_profile', 'roles', 'user_roles')",
+                "AND TABLE_NAME NOT IN ('oauth_users', 'users', 'user_profile', 'roles', 'user_roles', 'alerte_rate')",
                 String.class
             );
 
-            for (String table : tables) {
-                jdbcTemplate.execute("TRUNCATE TABLE " + table);
-            }
+            for (String table : tables) 
+            { jdbcTemplate.execute("TRUNCATE TABLE " + table); }
 
         } finally {
             jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");

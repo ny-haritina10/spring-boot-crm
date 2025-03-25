@@ -40,6 +40,7 @@ ALTER TABLE `trigger_lead`
 ADD COLUMN `expense_id` INT UNSIGNED DEFAULT NULL,
 ADD CONSTRAINT `fk_lead_expense` FOREIGN KEY (`expense_id`) REFERENCES `expense` (`expense_id`);
 
+INSERT INTO `alerte_rate` (percentage) VALUES (50);
 
 INSERT INTO `expense` (`amount`, `expense_date`) VALUES
 (1000.50, '2023-10-01'),

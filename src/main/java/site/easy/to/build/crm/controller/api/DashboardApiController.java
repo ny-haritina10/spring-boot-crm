@@ -40,7 +40,6 @@ public class DashboardApiController {
             long countTickets;
             long countLeads;
 
-            // Handle counts based on user role (customer or employee)
             if (AuthorizationUtil.hasRole(authentication, "ROLE_CUSTOMER")) {
                 String email = authenticationUtils.getOAuthUserFromAuthentication(authentication).getEmail();
                 

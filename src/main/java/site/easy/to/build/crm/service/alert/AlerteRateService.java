@@ -36,6 +36,4 @@ public class AlerteRateService {
         BigDecimal alertThreshold = totalBudget.multiply(alertPercentage).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         return totalExpensesAfterNew.compareTo(alertThreshold) >= 0;
     }
-
-    
 }

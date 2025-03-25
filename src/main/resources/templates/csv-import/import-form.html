@@ -58,6 +58,13 @@
                                     <span th:text="${error}"></span>
                                 </div>
 
+                                <div th:if="${errors != null && !errors.empty}" class="m-t-20">
+                                    <div class="alert alert-danger">
+                                        <h5><i class="fas fa-exclamation-triangle mr-2"></i> Import Failed</h5>
+                                        <p>The following errors were found in your CSV files. Please correct them and try again.</p>
+                                    </div>
+                                </div>
+
                                 <!-- Import Form -->
                                 <form method="post" th:action="@{/csv-import}" enctype="multipart/form-data">
                                     <div class="alert alert-info m-t-20">
@@ -69,19 +76,31 @@
                                         <div class="file-label">1. Customers CSV File</div>
                                         <div class="csv-instructions mb-2">
                                             Format: customer_email,customer_name<br>
-                                            Example: customer1@yopmail.com,john doe
+                                            Example: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cba8beb8bfa4a6aeb9fa8bb2a4bba6aaa2a7e5a8a4a6">[email&#160;protected]</a>,john doe
                                         </div>
                                         <div class="input-group">
                                             <input type="file" class="form-control" id="customersFile" name="customersFile" accept=".csv" required>
                                         </div>
                                     </div>
 
+                                    <!-- Budgets CSV File -->
+                                    <div class="file-input-container">
+                                        <div class="file-label">2. Customer Budgets CSV File</div>
+                                        <div class="csv-instructions mb-2">
+                                            Format: customer_email,amount<br>
+                                            Example: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e5869690918a888097d4a59c8a9588828a8feb868a88">[email&#160;protected]</a>,5000.00
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="budgetsFile" name="budgetsFile" accept=".csv" required>
+                                        </div>
+                                    </div>
+
                                     <!-- Items CSV File -->
                                     <div class="file-input-container">
-                                        <div class="file-label">2. Items CSV File (Tickets, Leads, Expenses)</div>
+                                        <div class="file-label">3. Items CSV File (Tickets, Leads, Expenses)</div>
                                         <div class="csv-instructions mb-2">
                                             Format: customer_email,subject_or_name,type,status,expense<br>
-                                            Example: customer1@yopmail.com,Lorem ipsum,lead,meeting-to-schedule,150000
+                                            Example: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="22415056514a48405714225b4d524f434b4e0c414d4f">[email&#160;protected]</a>,Lorem ipsum,lead,meeting-to-schedule,150000
                                         </div>
                                         <div class="input-group">
                                             <input type="file" class="form-control" id="itemsFile" name="itemsFile" accept=".csv" required>
@@ -95,10 +114,6 @@
 
                                 <!-- Error Details -->
                                 <div th:if="${errors != null && !errors.empty}" class="m-t-20">
-                                    <div class="alert alert-danger">
-                                        <h5><i class="fas fa-exclamation-triangle mr-2"></i> Import Failed</h5>
-                                        <p>The following errors were found in your CSV files. Please correct them and try again.</p>
-                                    </div>
                                     <div class="error-details">
                                         <h6>Error Details:</h6>
                                         <table class="table table-striped table-bordered">

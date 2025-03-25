@@ -30,16 +30,17 @@ public class CsvImportController {
     @PostMapping
     public String processImport(@RequestParam("customersFile") MultipartFile customersFile,
                                @RequestParam("itemsFile") MultipartFile itemsFile,
+                               @RequestParam("budgetsFile") MultipartFile budgetsFile,
                                Model model) {
-        // Check if files were uploaded
         if (customersFile.isEmpty() || itemsFile.isEmpty()) {
             model.addAttribute("error", "Please select both CSV files.");
             return "csv-import/import-form";
         }
 
-        // Prepare files map
         Map<String, MultipartFile> fileMap = new HashMap<>();
+        
         fileMap.put("customersFile", customersFile);
+        fileMap.put("budgetsFile", budgetsFile);
         fileMap.put("itemsFile", itemsFile);
 
         // Process the import

@@ -81,24 +81,19 @@ public class CustomerServiceImpl implements CustomerService {
             allocatedBudget = allocatedBudget.add(customerBudget.getAmount());
         }
         
-        // Get already used budget
         BigDecimal usedBudget = calculateTotalExpenses(customer);
-        
-        // Return remaining budget
         return allocatedBudget.subtract(usedBudget);
     }
 
     public BigDecimal calculateTotalExpenses(Customer customer) {
         BigDecimal totalExpenses = BigDecimal.ZERO;
         
-        // expense for leads
         List<Lead> customerLeads = this.leadService.findByCustomer(customer);
         for (Lead lead : customerLeads) 
         { 
             totalExpenses = totalExpenses.add(leadService.getLeadExpenseAmount(lead)); 
         }
         
-        // expense for tickets
         List<Ticket> customerTickets = this.ticketService.findByCustomer(customer);
         for (Ticket ticket : customerTickets) 
         { 

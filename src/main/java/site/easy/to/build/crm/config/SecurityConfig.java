@@ -152,12 +152,12 @@ public class SecurityConfig {
         http.securityMatcher("/api/**")
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add CORS configuration
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() // Allow preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() 
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/dashboard/**").authenticated() // Require auth for dashboard
-                .requestMatchers("/api/alerte-rates/**").permitAll() // Add this if you want public access
+                .requestMatchers("/api/dashboard/**").authenticated() 
+                .requestMatchers("/api/alerte-rates/**").permitAll() 
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(userService), UsernamePasswordAuthenticationFilter.class);

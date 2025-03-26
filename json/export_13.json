@@ -1,0 +1,91 @@
+{
+  "tickets" : [ {
+    "subject" : "Disintermediate dynamic bandwidth",
+    "description" : "First-time customer referred by an existing client.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 34,
+      "amount" : 6507.25,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Generate back-end content",
+    "description" : "First-time customer referred by an existing client.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 105,
+      "amount" : 1405.84,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Re-intermediate seamless e-business",
+    "description" : "International client requiring special attention.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 147,
+      "amount" : 151.01,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  } ],
+  "budgets" : [ {
+    "amount" : 48591.62,
+    "budgetId" : 13
+  }, {
+    "amount" : 80491.10,
+    "budgetId" : 24
+  } ],
+  "leads" : [ {
+    "phone" : "+33 6 07 88 56 43",
+    "name" : "Iterate integrated metrics",
+    "managerId" : 52,
+    "expense" : 1801.35,
+    "status" : "open"
+  }, {
+    "phone" : "+33 6 34 62 29 09",
+    "name" : "Repurpose killer e-services",
+    "managerId" : 52,
+    "expense" : 9912.3,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 26 95 92 11",
+    "name" : "Matrix impactful systems",
+    "managerId" : 52,
+    "expense" : 8967.34,
+    "status" : "open"
+  }, {
+    "phone" : "+33 6 50 94 16 07",
+    "name" : "Grow best-of-breed applications",
+    "managerId" : 52,
+    "expense" : 419.51,
+    "status" : "open"
+  }, {
+    "phone" : "+33 6 89 04 02 86",
+    "name" : "Deploy ubiquitous markets",
+    "managerId" : 52,
+    "expense" : 4886.83,
+    "status" : "open"
+  }, {
+    "phone" : "+33 6 03 66 35 55",
+    "name" : "Whiteboard user-centric applications",
+    "managerId" : 52,
+    "expense" : 6252.58,
+    "status" : "open"
+  } ],
+  "customer" : {
+    "country" : "USA",
+    "address" : "45 Main Street",
+    "phone" : "+33 6 85 68 15 38",
+    "city" : "Rome",
+    "name" : "copy_Sarah Aguilar",
+    "description" : "Long-term client with multiple projects.",
+    "position" : "CEO",
+    "state" : "Texas",
+    "email" : "copy_janice55@warren.org"
+  }
+}

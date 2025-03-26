@@ -2,6 +2,8 @@ package site.easy.to.build.crm.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.Cascade;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "trigger_ticket")
@@ -30,12 +31,12 @@ public class Ticket {
 
     @Column(name = "status")
     @NotBlank(message = "Status is required")
-    @Pattern(regexp = "^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$", message = "Invalid status")
+    // @Pattern(regexp = "^(open|meeting-to-schedule|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$", message = "Invalid status")
     private String status;
 
     @Column(name = "priority")
     @NotBlank(message = "Priority is required")
-    @Pattern(regexp = "^(low|medium|high|closed|urgent|critical)$", message = "Invalid priority")
+    // @Pattern(regexp = "^(low|medium|high|closed|urgent|critical)$", message = "Invalid priority")
     private String priority;
 
     @ManyToOne
@@ -50,8 +51,10 @@ public class Ticket {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @SuppressWarnings("deprecation")
     @ManyToOne
     @JoinColumn(name = "expense_id")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Expense expense;
 
     @Column(name = "created_at")

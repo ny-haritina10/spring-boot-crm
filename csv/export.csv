@@ -1,0 +1,28 @@
+customer
+name,email,position,phone,address,city,state,country,description
+copy_Eric Navarro,copy_zwells@martinez-wilson.info,CEO,+33 6 12 82 14 40,256 Broadway,Tokyo,Lazio,Germany,Long-term client with multiple projects.
+
+ticket
+subject,status,priority,manager,expense,description
+Innovate next-generation web-readiness,open,medium,52,site.easy.to.build.crm.entity.Expense@28075c45,First-time customer referred by an existing client.
+Innovate 24/7 synergies,open,medium,52,site.easy.to.build.crm.entity.Expense@5009e19a,Potential partnership opportunity.
+Benchmark strategic platforms,open,medium,52,site.easy.to.build.crm.entity.Expense@2ebfbbe7,Client with high-value potential projects.
+Scale intuitive channels,open,medium,52,site.easy.to.build.crm.entity.Expense@595bf987,Long-term client with multiple projects.
+Cultivate distributed e-services,open,medium,52,site.easy.to.build.crm.entity.Expense@3d420de8,New lead from the marketing campaign.
+789000,open,low,53,null,ITUITU
+
+leads
+name,status,manager,expense,phone
+Integrate compelling e-markets,open,52,9681.17,+33 7 86 12 24 72
+Redefine 24/7 deliverables,open,52,2862.77,+33 6 51 85 92 52
+Productize revolutionary models,open,52,6882.41,+33 7 44 33 38 82
+Deploy seamless schemas,open,52,8634.42,+33 6 81 31 33 71
+Deploy b2b applications,open,52,6229.91,+33 6 37 76 38 39
+Mesh best-of-breed users,open,52,9667.26,+33 7 84 94 50 51
+123456,success,53,999.0,aaabbb
+
+budgets
+budget_id,amount
+9,50874.62
+32,42449.10
+35,50417.51

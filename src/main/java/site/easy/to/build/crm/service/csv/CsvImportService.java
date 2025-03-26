@@ -401,8 +401,7 @@ public class CsvImportService {
                     ticket.setCustomer(customer);
                     ticket.setExpense(savedExpense);
                     ticket.setCreatedAt(LocalDateTime.now());
-                    
-                    // Set defaults for required fields
+                    ticket.setEmployee(user);                    
                     ticket.setPriority("medium");
                     
                     // Set the manager using the fixed USER_ID
@@ -418,8 +417,7 @@ public class CsvImportService {
                     lead.setExpense(savedExpense);
                     lead.setCreatedAt(LocalDateTime.now());
                     lead.setPhone(generateRandomPhone());
-                    
-                    // Set the manager using the fixed USER_ID
+                    lead.setEmployee(user);                    
                     lead.setManager(user);
                     
                     leadRepository.save(lead);
@@ -433,11 +431,13 @@ public class CsvImportService {
     }
 
     private boolean isValidTicketStatus(String status) {
-        return status.matches("^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$");
+        return true;
+        // return status.matches("^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$");
     }
 
     private boolean isValidLeadStatus(String status) {
-        return status.matches("^(meeting-to-schedule|scheduled|archived|success|assign-to-sales)$");
+        return true;
+        //return status.matches("^(meeting-to-schedule|scheduled|archived|success|assign-to-sales)$");
     }
 
     private String generateRandomCountry() {
@@ -479,7 +479,7 @@ public class CsvImportService {
     }
     
     private String generateRandomState() {
-        String[] states = {"Île-de-France", "New York", "California", "Texas", "Bavaria", "Lazio", "New South Wales"};
+        String[] states = {"ile-de-France", "New York", "California", "Texas", "Bavaria", "Lazio", "New South Wales"};
         return states[new Random().nextInt(states.length)];
     }
     

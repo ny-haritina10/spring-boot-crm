@@ -48,6 +48,8 @@ public class RandomTicketGenerator {
         List<User> users = userRepository.findAll();
         List<Customer> customers = customerRepository.findAll();
 
+        System.out.println("ticket generation randomss: " + users.size());
+
         if (users.isEmpty() || customers.isEmpty()) {
             throw new IllegalStateException("Cannot generate ticket: No users or customers found in the database.");
         }

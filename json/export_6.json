@@ -1,0 +1,116 @@
+{
+  "tickets" : [ {
+    "subject" : "Innovate next-generation web-readiness",
+    "description" : "Potential partnership opportunity.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 46,
+      "amount" : 3070.29,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Innovate 24/7 synergies",
+    "description" : "Potential partnership opportunity.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 54,
+      "amount" : 4759.42,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Benchmark strategic platforms",
+    "description" : "First-time customer referred by an existing client.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 63,
+      "amount" : 4536.61,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Scale intuitive channels",
+    "description" : "First-time customer referred by an existing client.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 72,
+      "amount" : 7673.45,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  }, {
+    "subject" : "Cultivate distributed e-services",
+    "description" : "Potential partnership opportunity.",
+    "managerId" : 52,
+    "priority" : "medium",
+    "expense" : {
+      "expenseId" : 130,
+      "amount" : 7080.96,
+      "expenseDate" : [ 2025, 3, 26 ]
+    },
+    "status" : "open"
+  } ],
+  "budgets" : [ {
+    "amount" : 50874.62,
+    "budgetId" : 9
+  }, {
+    "amount" : 42449.10,
+    "budgetId" : 32
+  }, {
+    "amount" : 50417.51,
+    "budgetId" : 35
+  } ],
+  "leads" : [ {
+    "phone" : "+33 6 01 73 53 09",
+    "name" : "Integrate compelling e-markets",
+    "managerId" : 52,
+    "expense" : 9681.17,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 30 43 90 48",
+    "name" : "Redefine 24/7 deliverables",
+    "managerId" : 52,
+    "expense" : 2862.77,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 56 84 93 84",
+    "name" : "Productize revolutionary models",
+    "managerId" : 52,
+    "expense" : 6882.41,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 15 48 24 08",
+    "name" : "Deploy seamless schemas",
+    "managerId" : 52,
+    "expense" : 8634.42,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 40 06 65 06",
+    "name" : "Deploy b2b applications",
+    "managerId" : 52,
+    "expense" : 6229.91,
+    "status" : "open"
+  }, {
+    "phone" : "+33 7 28 36 58 20",
+    "name" : "Mesh best-of-breed users",
+    "managerId" : 52,
+    "expense" : 9667.26,
+    "status" : "open"
+  } ],
+  "customer" : {
+    "country" : "France",
+    "address" : "8 Via Roma",
+    "phone" : "+33 6 15 48 64 28",
+    "city" : "Sydney",
+    "name" : "copy_Eric Navarro",
+    "description" : "Client with high-value potential projects.",
+    "position" : "Operations Director",
+    "state" : "New South Wales",
+    "email" : "copy_zwells@martinez-wilson.info"
+  }
+}

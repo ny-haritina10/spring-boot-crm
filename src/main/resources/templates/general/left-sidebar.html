@@ -6,10 +6,10 @@
             <ul id="sidebarnav" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'') or hasRole(''ROLE_EMPLOYEE'')')}">
                 <li class="user-pro">
                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                        <img th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" th:src="${#authentication.principal.picture}" alt="user-img" class="img-circle">
+                        <img th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" th:src="@{/images/pp.png}" alt="user-img" class="img-circle">
                         <img th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.User)}" th:src="@{/images/pp.png}" class="img-circle">
-                        <span th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" class="hide-menu" th:text="${#authentication.principal.givenName + ' ' +  #authentication.principal.familyName}"></span>
-                        <span th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.User)}" class="hide-menu" th:text="${#authentication.principal.username}"></span>
+                        <span th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}" class="hide-menu" th:text="${'User'}"></span>
+                        <span th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.User)}" class="hide-menu" th:text="${'User Profile'}"></span>
                     </a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a th:href="${home + 'employee/profile'}"><i class="ti-user"></i> My Profile</a></li>

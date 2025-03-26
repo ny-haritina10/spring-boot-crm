@@ -11,7 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "trigger_ticket")
@@ -30,12 +29,12 @@ public class Ticket {
 
     @Column(name = "status")
     @NotBlank(message = "Status is required")
-    @Pattern(regexp = "^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$", message = "Invalid status")
+    // @Pattern(regexp = "^(open|meeting-to-schedule|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$", message = "Invalid status")
     private String status;
 
     @Column(name = "priority")
     @NotBlank(message = "Priority is required")
-    @Pattern(regexp = "^(low|medium|high|closed|urgent|critical)$", message = "Invalid priority")
+    // @Pattern(regexp = "^(low|medium|high|closed|urgent|critical)$", message = "Invalid priority")
     private String priority;
 
     @ManyToOne

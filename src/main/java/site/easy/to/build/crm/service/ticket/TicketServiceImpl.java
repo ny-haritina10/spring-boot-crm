@@ -1,6 +1,8 @@
 package site.easy.to.build.crm.service.ticket;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -126,5 +128,25 @@ public class TicketServiceImpl implements TicketService{
         }
         
         return BigDecimal.ZERO;
+    }
+
+    @Override
+    public List<Ticket> findTicketsByFilters(String priority, LocalDate startDate) {
+        List<Ticket> all = this.ticketRepository.findAll();
+        List<Ticket> result = new ArrayList<>();
+
+        for (Ticket ticket : all) {
+            boolean matchesPriority = priority == null || priority.equals(ticket.getPriority());
+            boolean matchesDate = startDate == null || 
+                                (ticket.getExpense() != null && 
+                                ticket.getExpense().getExpenseDate() != null && 
+                                ticket.getExpense().getExpenseDate().isBefore(startDate));
+
+            if (matchesPriority && matchesDate) {
+                result.add(ticket);
+            }
+        }
+
+        return result; 
     }
 }

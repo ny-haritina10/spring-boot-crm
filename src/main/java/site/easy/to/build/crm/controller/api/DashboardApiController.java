@@ -49,7 +49,7 @@ public class DashboardApiController {
     @GetMapping("/counts")
     public ResponseEntity<?> getDashboardCounts(Authentication authentication) {
         try {
-            int userId = authenticationUtils.getLoggedInUserId(authentication);
+            // int userId = authenticationUtils.getLoggedInUserId(authentication);
             Map<String, Long> response = new HashMap<>();
             
             long countTickets;

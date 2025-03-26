@@ -1,10 +1,12 @@
 package site.easy.to.build.crm.controller.api;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import site.easy.to.build.crm.dto.LeadDTO;
@@ -160,10 +163,19 @@ public class ExpenseApiController {
     }
 
     @GetMapping("/tickets")
-    public ResponseEntity<?> getAllTicketsWithExpenses() {
+    public ResponseEntity<?> getAllTicketsWithExpenses(
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
         try {
-            List<Ticket> allTickets = ticketService.findAll();
-            List<TicketDTO> ticketsWithExpenses = allTickets.stream()
+            List<Ticket> tickets;
+            
+            if (priority != null || startDate != null) {
+                tickets = ticketService.findTicketsByFilters(priority, startDate);
+            } else {
+                tickets = ticketService.findAll();
+            }
+
+            List<TicketDTO> ticketsWithExpenses = tickets.stream()
                 .map(ticket -> new TicketDTO(
                     ticket.getTicketId(),
                     ticket.getSubject(),

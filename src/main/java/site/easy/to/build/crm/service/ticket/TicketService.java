@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.service.ticket;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import site.easy.to.build.crm.entity.Customer;
@@ -42,4 +43,6 @@ public interface TicketService {
     public List<Ticket> findByCustomer(Customer customer);
 
     public BigDecimal getTicketExpenseAmount(Ticket tiket);
+
+    List<Ticket> findTicketsByFilters(String priority, LocalDate filterDate);
 }

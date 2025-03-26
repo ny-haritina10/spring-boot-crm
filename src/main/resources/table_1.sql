@@ -285,10 +285,6 @@ CREATE TABLE IF NOT EXISTS `lead_settings` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-
-
-
-
 CREATE TABLE IF NOT EXISTS `ticket_settings` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `priority` tinyint(1) DEFAULT NULL,

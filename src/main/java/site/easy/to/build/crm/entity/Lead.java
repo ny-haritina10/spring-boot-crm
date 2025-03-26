@@ -3,6 +3,8 @@ package site.easy.to.build.crm.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,8 +67,10 @@ public class Lead {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @SuppressWarnings("deprecation")
     @ManyToOne
     @JoinColumn(name = "expense_id")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Expense expense;
 
     @Column(name = "created_at")

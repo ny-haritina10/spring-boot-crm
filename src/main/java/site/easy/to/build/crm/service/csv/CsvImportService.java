@@ -479,7 +479,7 @@ public class CsvImportService {
     }
     
     private String generateRandomState() {
-        String[] states = {"Île-de-France", "New York", "California", "Texas", "Bavaria", "Lazio", "New South Wales"};
+        String[] states = {"ile-de-France", "New York", "California", "Texas", "Bavaria", "Lazio", "New South Wales"};
         return states[new Random().nextInt(states.length)];
     }
     

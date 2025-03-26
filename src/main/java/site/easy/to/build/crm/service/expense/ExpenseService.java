@@ -3,6 +3,7 @@ package site.easy.to.build.crm.service.expense;
 import java.math.BigDecimal;
 import java.util.List;
 
+import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Expense;
 
 public interface ExpenseService {
@@ -17,4 +18,6 @@ public interface ExpenseService {
     public List<Expense> findAll();
 
     public BigDecimal getTotalExpenses();
+
+    public BigDecimal getTotalExpenseCustomer(Customer Customer);
 }   

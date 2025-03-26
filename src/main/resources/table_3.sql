@@ -121,7 +121,9 @@ CREATE TABLE IF NOT EXISTS `alerte_rate` (
 
 
 
-
+/* --------------------------- */
+/* --------------------------- */
+/* --------------------------- */
 
 SELECT 
     c.customer_id, 
@@ -136,3 +138,5 @@ GROUP BY
     c.name
 ORDER BY 
     total_budget DESC;
+
+

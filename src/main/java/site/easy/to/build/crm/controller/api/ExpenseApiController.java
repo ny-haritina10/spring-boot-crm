@@ -197,6 +197,7 @@ public class ExpenseApiController {
                     .body("No tickets with expenses found");
             }
             
+            // BigDecimal re = this.expenseService.getTotalExpenseCustomer()
             return ResponseEntity.ok(ticketsWithExpenses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

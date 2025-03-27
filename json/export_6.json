@@ -1,57 +1,57 @@
 {
   "tickets" : [ {
     "subject" : "Innovate next-generation web-readiness",
-    "description" : "Potential partnership opportunity.",
+    "description" : "Client with high-value potential projects.",
     "managerId" : 52,
     "priority" : "medium",
     "expense" : {
       "expenseId" : 46,
       "amount" : 3070.29,
-      "expenseDate" : [ 2025, 3, 26 ]
+      "expenseDate" : [ 2025, 3, 27 ]
     },
     "status" : "open"
   }, {
     "subject" : "Innovate 24/7 synergies",
-    "description" : "Potential partnership opportunity.",
+    "description" : "International client requiring special attention.",
     "managerId" : 52,
     "priority" : "medium",
     "expense" : {
       "expenseId" : 54,
       "amount" : 4759.42,
-      "expenseDate" : [ 2025, 3, 26 ]
+      "expenseDate" : [ 2025, 3, 27 ]
     },
     "status" : "open"
   }, {
     "subject" : "Benchmark strategic platforms",
-    "description" : "First-time customer referred by an existing client.",
+    "description" : "International client requiring special attention.",
     "managerId" : 52,
     "priority" : "medium",
     "expense" : {
       "expenseId" : 63,
       "amount" : 4536.61,
-      "expenseDate" : [ 2025, 3, 26 ]
+      "expenseDate" : [ 2025, 3, 27 ]
     },
     "status" : "open"
   }, {
     "subject" : "Scale intuitive channels",
-    "description" : "First-time customer referred by an existing client.",
+    "description" : "Long-term client with multiple projects.",
     "managerId" : 52,
     "priority" : "medium",
     "expense" : {
       "expenseId" : 72,
       "amount" : 7673.45,
-      "expenseDate" : [ 2025, 3, 26 ]
+      "expenseDate" : [ 2025, 3, 27 ]
     },
     "status" : "open"
   }, {
     "subject" : "Cultivate distributed e-services",
-    "description" : "Potential partnership opportunity.",
+    "description" : "Long-term client with multiple projects.",
     "managerId" : 52,
     "priority" : "medium",
     "expense" : {
       "expenseId" : 130,
       "amount" : 7080.96,
-      "expenseDate" : [ 2025, 3, 26 ]
+      "expenseDate" : [ 2025, 3, 27 ]
     },
     "status" : "open"
   } ],
@@ -66,37 +66,37 @@
     "budgetId" : 35
   } ],
   "leads" : [ {
-    "phone" : "+33 6 01 73 53 09",
+    "phone" : "+33 7 76 08 70 19",
     "name" : "Integrate compelling e-markets",
     "managerId" : 52,
     "expense" : 9681.17,
     "status" : "open"
   }, {
-    "phone" : "+33 7 30 43 90 48",
+    "phone" : "+33 6 45 43 69 11",
     "name" : "Redefine 24/7 deliverables",
     "managerId" : 52,
     "expense" : 2862.77,
     "status" : "open"
   }, {
-    "phone" : "+33 7 56 84 93 84",
+    "phone" : "+33 7 45 74 88 16",
     "name" : "Productize revolutionary models",
     "managerId" : 52,
     "expense" : 6882.41,
     "status" : "open"
   }, {
-    "phone" : "+33 7 15 48 24 08",
+    "phone" : "+33 6 32 10 76 78",
     "name" : "Deploy seamless schemas",
     "managerId" : 52,
     "expense" : 8634.42,
     "status" : "open"
   }, {
-    "phone" : "+33 7 40 06 65 06",
+    "phone" : "+33 6 97 39 47 01",
     "name" : "Deploy b2b applications",
     "managerId" : 52,
     "expense" : 6229.91,
     "status" : "open"
   }, {
-    "phone" : "+33 7 28 36 58 20",
+    "phone" : "+33 6 56 94 30 68",
     "name" : "Mesh best-of-breed users",
     "managerId" : 52,
     "expense" : 9667.26,
@@ -104,13 +104,13 @@
   } ],
   "customer" : {
     "country" : "France",
-    "address" : "8 Via Roma",
-    "phone" : "+33 6 15 48 64 28",
+    "address" : "8 Park Avenue",
+    "phone" : "+33 7 48 22 68 87",
     "city" : "Sydney",
     "name" : "copy_Eric Navarro",
-    "description" : "Client with high-value potential projects.",
-    "position" : "Operations Director",
-    "state" : "New South Wales",
+    "description" : "Long-term client with multiple projects.",
+    "position" : "Marketing Director",
+    "state" : "ile-de-France",
     "email" : "copy_zwells@martinez-wilson.info"
   }
 }

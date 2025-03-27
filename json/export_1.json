@@ -1,0 +1,147 @@
+{
+  "tickets" : [ {
+    "subject" : "Feature Request",
+    "description" : "Urgent: payment processing affecting multiple users.",
+    "managerId" : 55,
+    "priority" : "low",
+    "expense" : null,
+    "status" : "open"
+  }, {
+    "subject" : "Feature Request",
+    "description" : "System encountered new dashboard feature error on last login attempt.",
+    "managerId" : 54,
+    "priority" : "high",
+    "expense" : null,
+    "status" : "pending-customer-response"
+  }, {
+    "subject" : "Account Suspension",
+    "description" : "Urgent: authentication affecting multiple users.",
+    "managerId" : 53,
+    "priority" : "low",
+    "expense" : null,
+    "status" : "resolved"
+  }, {
+    "subject" : "Bug Report",
+    "description" : "Request for slow response times submitted by customer.",
+    "managerId" : 53,
+    "priority" : "urgent",
+    "expense" : null,
+    "status" : "reopened"
+  }, {
+    "subject" : "Bug Report",
+    "description" : "User reported an issue with unexpected crash.",
+    "managerId" : 53,
+    "priority" : "high",
+    "expense" : null,
+    "status" : "closed"
+  }, {
+    "subject" : "Performance Problem",
+    "description" : "Request for payment processing submitted by customer.",
+    "managerId" : 53,
+    "priority" : "critical",
+    "expense" : null,
+    "status" : "pending-customer-response"
+  }, {
+    "subject" : "Bug Report",
+    "description" : "Urgent: unauthorized access affecting multiple users.",
+    "managerId" : 55,
+    "priority" : "medium",
+    "expense" : null,
+    "status" : "escalated"
+  }, {
+    "subject" : "Payment Failure",
+    "description" : "System encountered unexpected crash error on last login attempt.",
+    "managerId" : 53,
+    "priority" : "urgent",
+    "expense" : null,
+    "status" : "on-hold"
+  }, {
+    "subject" : "Bug Report",
+    "description" : "Customer experienced new dashboard feature during their session.",
+    "managerId" : 53,
+    "priority" : "medium",
+    "expense" : null,
+    "status" : "reopened"
+  }, {
+    "subject" : "Security Concern",
+    "description" : "System encountered payment processing error on last login attempt.",
+    "managerId" : 53,
+    "priority" : "high",
+    "expense" : null,
+    "status" : "on-hold"
+  }, {
+    "subject" : "Payment Failure",
+    "description" : "System encountered slow response times error on last login attempt.",
+    "managerId" : 52,
+    "priority" : "low",
+    "expense" : null,
+    "status" : "open"
+  }, {
+    "subject" : "Login Issue",
+    "description" : "Customer experienced unauthorized access during their session.",
+    "managerId" : 53,
+    "priority" : "medium",
+    "expense" : null,
+    "status" : "in-progress"
+  }, {
+    "subject" : "Login Issue",
+    "description" : "User reported an issue with unauthorized access.",
+    "managerId" : 55,
+    "priority" : "medium",
+    "expense" : null,
+    "status" : "resolved"
+  }, {
+    "subject" : "Account Suspension",
+    "description" : "User reported an issue with unauthorized access.",
+    "managerId" : 55,
+    "priority" : "closed",
+    "expense" : null,
+    "status" : "archived"
+  } ],
+  "budgets" : [ {
+    "amount" : 1800000.00,
+    "budgetId" : 1
+  }, {
+    "amount" : 350000.00,
+    "budgetId" : 3
+  }, {
+    "amount" : 1000000.00,
+    "budgetId" : 4
+  }, {
+    "amount" : 500000.00,
+    "budgetId" : 5
+  }, {
+    "amount" : 700000.00,
+    "budgetId" : 6
+  }, {
+    "amount" : 150000.00,
+    "budgetId" : 8
+  }, {
+    "amount" : 300000.00,
+    "budgetId" : 11
+  } ],
+  "leads" : [ {
+    "phone" : "+33 6 08 23 03 09",
+    "name" : "Lorem ipsum",
+    "managerId" : 52,
+    "expense" : 150000.0,
+    "status" : "meeting-to-schedule"
+  }, {
+    "phone" : "+33 7 18 38 87 54",
+    "name" : "Test avant",
+    "managerId" : 52,
+    "expense" : 68500.87,
+    "status" : "archived"
+  } ],
+  "customer" : {
+    "country" : "Japan",
+    "address" : "42 Via Roma",
+    "phone" : "+33 7 88 82 00 65",
+    "city" : "Berlin",
+    "name" : "copy_john doe",
+    "description" : "New lead from the marketing campaign.",
+    "position" : "Marketing Director",
+    "state" : "Texas",
+    "email" : "copy_customer1@yopmail.com"
+  }
+}

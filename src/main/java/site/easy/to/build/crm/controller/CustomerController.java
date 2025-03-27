@@ -109,7 +109,7 @@ public class CustomerController {
 
         model.addAttribute("customer",customer);
         return "customer/customer-details";
-    }
+    } 
 
     @GetMapping("/create-customer")
     public String showCreateCustomerForm(Model model, Authentication authentication){
